@@ -5,6 +5,8 @@ python manage.py shell
 
 Импортирование моделей
 from api.models import BranchOffice, Department, Employee
+from random import randint, choice
+from datetime import datetime
 
 ---- Заполнение данными ----
 
@@ -78,7 +80,7 @@ for department in Department.objects.all():
             name = f"{f_name} {l_name}",
             position = choice(types),
             phone_number = f"8(9{randint(10,99)}){randint(100,999)}-{randint(10,99)}-{randint(10,99)}",
-            birth_date = datetime(2023, 10, 25, 15, 30),
+            birth_date = datetime(randint(1985,2005), 10, 25, 15, 30),
             email = f"{f_name.lower()}_{l_name.lower()}@{choice(mails)}.{choice(coms)}",
             department = department
         )
@@ -89,11 +91,17 @@ for employee in Employee.objects.all():
 
 
 Удаление email
-employee = Employee.objects.get(pk=25)
-print(employee.email)
+employee = Employee.objects.get(pk=200)
 employee.email = None
 employee.save()
-print(Employee.objects.get(pk=25).email)
+employee = Employee.objects.get(pk=220)
+employee.email = None
+employee.save()
+employee = Employee.objects.get(pk=230)
+employee.email = None
+employee.save()
+
+print(Employee.objects.get(pk=200).email)
 
 ---- Запросы
 1 с должностью “Менеджер”
@@ -136,6 +144,7 @@ for employee in Employee.objects.filter(birth_date__year=1990):
 
 ---- Удаление ----
 Department.objects.all().delete()
+Employee.objects.all().delete()
 
 
 

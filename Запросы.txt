@@ -1,0 +1,47 @@
+1 количество сотрудников с должностью “Менеджер”
+
+print(Employee.objects.filter(position="менеджер").count())
+
+
+2 список сотрудников, работающих на четвертых этажах
+
+for employee in Employee.objects.filter(department__floor=4):
+    print(employee.name, employee.position, employee.phone_number, employee.email, employee.department.name)
+
+
+3 узнать ID двух отделов, и получить список всех сотрудников, работающих в этих двух филиалах, с помощью Q
+
+for branch in BranchOffice.objects.all()[:2]:
+    print(branch.pk)
+
+for employee in Employee.objects.filter(
+    Q(department__branch_office__pk=1) |
+    Q(department__branch_office__pk=2)
+    ):
+    print(employee.name, employee.position, employee.phone_number, employee.email, employee.department.name)
+
+
+Запросы продвинутые
+1 список сотрудников, работающих в тех же двух филиалах из прошлого вопроса, только вместо Q используется лукап, проверяющий вхождение ID в список
+
+for employee in Employee.objects.filter(
+    department__branch_office__pk__in= list(
+        BranchOffice.objects.values_list("pk",flat=True)[:2]
+        )
+    ):
+    print(employee.name, employee.position, employee.phone_number, employee.email, employee.department.name)
+
+2 список ФИО сотрудников, у которых не указан email
+
+print
+(
+    list
+    (
+        Employee.objects.filter(email__isnull=True).values_list("name",flat=True)
+    )
+)
+
+3 список сотрудников, чей год рождения 1990
+
+for employee in Employee.objects.filter(birth_date__year=1990):
+    print(employee.name, employee.position, employee.phone_number, employee.email, employee.department.name)
